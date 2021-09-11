@@ -1,4 +1,5 @@
 import './dnd.css';
+import 'tippy.js/dist/tippy.css';
 import React, { useMemo } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -9,7 +10,7 @@ import { Search } from '@styled-icons/material/Search';
 import { createBlockquotePlugin } from '@udecode/plate-block-quote';
 import { createCodeBlockPlugin } from '@udecode/plate-code-block';
 import { withProps } from '@udecode/plate-common';
-import { createHistoryPlugin, createReactPlugin } from '@udecode/plate-core';
+import { createHistoryPlugin, createReactPlugin, PlatePlugin } from '@udecode/plate-core';
 import { createHeadingPlugin, ELEMENT_H1 } from '@udecode/plate-heading';
 import { createImagePlugin, ELEMENT_IMAGE } from '@udecode/plate-image';
 import { createLinkPlugin } from '@udecode/plate-link';
@@ -66,85 +67,118 @@ import { createUnderlinePlugin } from '../packages/marks/basic-marks/src/underli
 import { createHighlightPlugin } from '../packages/marks/highlight/src/createHighlightPlugin';
 import { createKbdPlugin } from '../packages/marks/kbd/src/createKbdPlugin';
 import { createNodeIdPlugin } from '../packages/node-id/src/createNodeIdPlugin';
-import { createNormalizeTypesPlugin } from '../packages/normalizers/src/createNormalizeTypesPlugin';
 import { createPlateComponents } from '../packages/plate/src/utils/createPlateComponents';
 import { createPlateOptions } from '../packages/plate/src/utils/createPlateOptions';
 import { createResetNodePlugin } from '../packages/reset-node/src/createResetNodePlugin';
 import { createSelectOnBackspacePlugin } from '../packages/select/src/createSelectOnBackspacePlugin';
 import { createDeserializeHTMLPlugin } from '../packages/serializers/html-serializer/src/deserializer/createDeserializeHTMLPlugin';
 import { createTrailingBlockPlugin } from '../packages/trailing-block/src/createTrailingBlockPlugin';
+import { SPEditor } from '@udecode/plate-core/src/types';
+import { createDeserializeAstPlugin, createDeserializeCSVPlugin, createDeserializeMDPlugin, createFontBackgroundColorPlugin, createFontColorPlugin, MARK_BG_COLOR, MARK_COLOR, StyledLeaf, withStyledProps } from '@udecode/plate';
+import { createExcalidrawPlugin, ELEMENT_EXCALIDRAW } from '@udecode/plate-excalidraw';
+import { HistoryEditor } from 'slate-history';
+import { ReactEditor } from 'slate-react';
 
 export default {
-  title: 'Drag & Drop',
+  title: 'Tmp',
 } as Meta;
 
-export const Example = () => {
-  let styledComponents = createPlateComponents({
-    [ELEMENT_MENTION]: withProps(MentionElement, {
-      renderLabel: renderMentionLabel,
-    }),
-  });
-  styledComponents = withStyledPlaceHolders(styledComponents);
-  styledComponents = withStyledDraggables(styledComponents);
+type TEditor = SPEditor & ReactEditor & HistoryEditor
 
-  const defaultOptions = createPlateOptions();
+const id = 'Examples/Tmp';
 
-  const Editor = () => {
-    const { setSearch, plugin: searchHighlightPlugin } = useFindReplacePlugin();
-    const { getMentionSelectProps, plugin: mentionPlugin } = useMentionPlugin(
-      optionsMentionPlugin
-    );
+let components = createPlateComponents({
+  [ELEMENT_MENTION]: withProps(MentionElement, {
+    renderLabel: renderMentionLabel,
+  }),
+//  [ELEMENT_EXCALIDRAW]: ExcalidrawElement,
+  [MARK_COLOR]: withStyledProps(StyledLeaf, {
+    leafProps: {
+      [MARK_COLOR]: ['color'],
+    },
+  }),
+  [MARK_BG_COLOR]: withStyledProps(StyledLeaf, {
+    leafProps: {
+      [MARK_BG_COLOR]: ['backgroundColor'],
+    },
+  }),
+  // customize your components by plugin key
+})
+components = withStyledPlaceHolders(components)
+components = withStyledDraggables(components)
 
-    const pluginsMemo = useMemo(() => {
-      const plugins = [
-        createReactPlugin(),
-        createHistoryPlugin(),
-        createParagraphPlugin(),
-        createBlockquotePlugin(),
-        createTodoListPlugin(),
-        createHeadingPlugin(),
-        createImagePlugin(),
-        createLinkPlugin(),
-        createListPlugin(),
-        createTablePlugin(),
-        createMediaEmbedPlugin(),
-        createCodeBlockPlugin(),
-        createAlignPlugin(),
-        createBoldPlugin(),
-        createCodePlugin(),
-        createItalicPlugin(),
-        createHighlightPlugin(),
-        createUnderlinePlugin(),
-        createStrikethroughPlugin(),
-        createSubscriptPlugin(),
-        createSuperscriptPlugin(),
-        createKbdPlugin(),
-        createNodeIdPlugin(),
-        createAutoformatPlugin(optionsAutoformat),
-        createResetNodePlugin(optionsResetBlockTypePlugin),
-        createSoftBreakPlugin(optionsSoftBreakPlugin),
-        createExitBreakPlugin(optionsExitBreakPlugin),
-        createNormalizeTypesPlugin({
-          rules: [{ path: [0], strictType: ELEMENT_H1 }],
-        }),
-        createTrailingBlockPlugin({ type: ELEMENT_PARAGRAPH }),
-        createSelectOnBackspacePlugin({ allow: ELEMENT_IMAGE }),
-        mentionPlugin,
-        searchHighlightPlugin,
-        createDndPlugin(),
-      ];
+const options = createPlateOptions({
+  // customize your options by plugin key
+})
 
-      plugins.push(createDeserializeHTMLPlugin({ plugins }));
+export const Plugins = () => {
+  const { setSearch, plugin: searchHighlightPlugin } = useFindReplacePlugin()
+  const { getMentionSelectProps, plugin: mentionPlugin } = useMentionPlugin(
+    optionsMentionPlugin
+  )
 
-      return plugins;
-    }, [mentionPlugin, searchHighlightPlugin]);
+  const pluginsMemo: PlatePlugin<TEditor>[] = useMemo(() => {
+    const plugins = [
+      createReactPlugin(),
+      createHistoryPlugin(),
+      createParagraphPlugin(),
+      createBlockquotePlugin(),
+      createTodoListPlugin(),
+      createHeadingPlugin(),
+      createImagePlugin(),
+      createLinkPlugin(),
+      createListPlugin(),
+      createTablePlugin(),
+      createMediaEmbedPlugin(),
+      createCodeBlockPlugin(),
+      createExcalidrawPlugin(),
+      createAlignPlugin(),
+      createBoldPlugin(),
+      createCodePlugin(),
+      createItalicPlugin(),
+      createHighlightPlugin(),
+      createUnderlinePlugin(),
+      createStrikethroughPlugin(),
+      createSubscriptPlugin(),
+      createSuperscriptPlugin(),
+      createFontColorPlugin(),
+      createFontBackgroundColorPlugin(),
+      createKbdPlugin(),
+      createNodeIdPlugin(),
+      createDndPlugin(),
+      createAutoformatPlugin(optionsAutoformat),
+      createResetNodePlugin(optionsResetBlockTypePlugin),
+      createSoftBreakPlugin(optionsSoftBreakPlugin),
+      createExitBreakPlugin(optionsExitBreakPlugin),
+      createTrailingBlockPlugin({
+        type: ELEMENT_PARAGRAPH,
+      }),
+      createSelectOnBackspacePlugin({
+        allow: [ELEMENT_IMAGE, ELEMENT_EXCALIDRAW],
+      }),
+      mentionPlugin,
+      searchHighlightPlugin,
+    ]
 
-    return (
+    plugins.push(
+      ...[
+        createDeserializeMDPlugin({ plugins }),
+        createDeserializeCSVPlugin({ plugins }),
+        createDeserializeHTMLPlugin({ plugins }),
+        createDeserializeAstPlugin({ plugins }),
+      ]
+    )
+
+    return plugins
+  }, [mentionPlugin, searchHighlightPlugin])
+
+  return (
+    <DndProvider backend={HTML5Backend}>
       <Plate
-        id="playground"
+        id={id}
         plugins={pluginsMemo}
-        components={styledComponents}
-        options={defaultOptions}
+        components={components}
+        options={options}
         editableProps={editableProps}
         initialValue={initialValuePlayground}
       >
@@ -166,14 +200,6 @@ export const Example = () => {
           renderLabel={renderMentionLabel}
         />
       </Plate>
-    );
-  };
-
-  return (
-    <div className="main">
-      <DndProvider backend={HTML5Backend}>
-        <Editor />
-      </DndProvider>
-    </div>
+    </DndProvider>
   );
 };
