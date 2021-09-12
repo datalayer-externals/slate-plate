@@ -61,7 +61,7 @@ import {
   ELEMENT_EXCALIDRAW,
 //  ExcalidrawElement,
 } from '@udecode/plate-excalidraw'
-import { initialValuePlayground } from './../config/initialValues'
+import { initialValuePlayground } from './config/initialValues'
 import {
   editableProps,
   optionsAutoformat,
@@ -69,11 +69,11 @@ import {
   optionsMentionPlugin,
   optionsResetBlockTypePlugin,
   optionsSoftBreakPlugin,
-} from './../config/pluginOptions'
-import { renderMentionLabel } from './../config/renderMentionLabel'
-import { BallonToolbarMarks, ToolbarButtons } from './../config/Toolbars'
-import { withStyledPlaceHolders } from './../config/withStyledPlaceHolders'
-import { withStyledDraggables } from './../config/withStyledDraggables'
+} from './config/pluginOptions'
+import { renderMentionLabel } from './config/renderMentionLabel'
+import { BallonToolbarMarks, ToolbarButtons } from './config/Toolbars'
+import { withStyledPlaceHolders } from './config/withStyledPlaceHolders'
+import { withStyledDraggables } from './config/withStyledDraggables'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Search } from '@styled-icons/material/Search'

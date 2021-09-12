@@ -1,11 +1,11 @@
 import { render } from 'react-dom';
-import PlateExample from './examples/Example1';
+import Example from './Example';
 
 import 'tippy.js/dist/tippy.css';
 
 import './index.css';
 
 render(
-  <PlateExample />,
+  <Example />,
   document.getElementById('root'),
 );
