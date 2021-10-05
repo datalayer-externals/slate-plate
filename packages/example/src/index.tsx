@@ -1,5 +1,5 @@
 import { render } from 'react-dom';
-import Example from './Example';
+import Example from './examples/SimplePluginsComponents';
 
 import 'tippy.js/dist/tippy.css';
 
